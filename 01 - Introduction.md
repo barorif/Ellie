@@ -53,4 +53,25 @@ The first `GOTO` simply goes around the second `GOTO`, which seems a bit disorga
     OVFLO:
           ...
 
-One less statement, simpler logic, and, as it happens, we no longer need the label `OVFLO`. The lesson? Don't branch around branches: turn relational tests around if it makes the program easier to understand.
+One less statement, simpler logic, and, as it happens, we no longer need the label `OVFLO`. The lesson? Don't branch around branches: turn relational tests around if it makes the program easier to understand. We wil soon see a Fortran example of exactly the same failing, which brings up an important point: although details vary from language to language, *the principles of style are the same*. Branching around branches is confusing in any language. So even though you program in Cobol or Basic or assembly language or whatever, the guidelines you find here still apply.
+
+It might seem that we're making a great fuss about a little thing in this last example. After all, it's still pretty obvious what the code says. The trouble is, although any single weakness causes no great harm, the cumulative effect of several confusing statements is code that is simply unintelligible.
+
+Our next example is somewhat larger:
+
+_The following is a typical program to evaluate the square root (`B`) of a number (`X`):_
+
+      READ (5,1)X
+    1 FORMAT(F10.5)
+      A=X/2
+    2 B=(X/A+A)/2
+      C=B-A
+      IF(C.LT.0)C=-C
+      IF(C.LT.10.E-6)GOTO 3
+      A=B
+      GOTO 2
+    3 WRITE(6,1)B
+      STOP
+      END
+
+Because it is bigger, we can study it on several levels and learn something from each.
