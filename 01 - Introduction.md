@@ -79,3 +79,44 @@ _The following is a typical program to evaluate the square root (`B`) of a numbe
 Because it is bigger, we can study it on several levels and learn something from each. For instance, before we analyze the code in detail, we might consider whether this program is truly "typical." It is unlikely that a square root routine would be packaged as a main program that reads its input from a file--a function with an argument would be far more useful. Even assuming that we really do want a main program that computes square roots, is it likely that we would want it to compute only one before stopping?
 
 This unfortunate tendency to write overly restricted code influences how we write programs that are supposed to be general. Soon enough we shall meet programs designed to keep track of exactly seventeen salesmen, to sort precisely 500 numbers, to trace through just one maze. We can only guess at how much of the program rewriting that goes on every day actually amounts to entering parameters via the compiler.
+
+Let us continue with the square root program. It is an implementation of Newton's method, which is indeed at the heart of many a library square root routine (although we need not go into precisely how it works). With proper data, the method converges rapidly. If `X` is negative, however, this program can go into an infinite loop. (Try it.) A good routine would instead provide an error return or a diagnostic message. And the program blows up in statement 2 if `X` is zero, a case that must be treated spearately. The square root of zero should be reported as zero.
+
+Even for strictly positive values of `X` this program can give garbage for an answer. The problem lies in the convergence test used:
+
+      C=B-A
+      IF(C.LT.0)C=-C
+      IF(C.LT.10.E-6)GOTO 3
+
+To make effective use of the Fortran language, the second line should read
+
+      C = ABS(C)
+
+To avoid having someone misread `10.E-6` as "10 to the minus sixth power," the constant in the third line should be `1.0E-5` or even `0.00001`. And to say what is meant without bombast, all three lines should be changed to
+
+      IF (ABS(B-A) .LT. 1.0E-5) GOTO 3
+
+The test now reads clearly; it is merely wrong.
+
+If `X` is large, it is quite possible that the absolute difference between successive trial roots will never be less than the arbitrary threshold of `1.0E-5` unless it is exactly zero, because of the finite precision with which computers represent numbers. It is a delicate question of numerical analysis whether this difference will always become zero. For small values of `X`, on the other hand, the criterion will be met long before a good approximation is attained. But if we replace the absolute convergence criterion by a test of whether the estimate is close enough *relative to the original data*, we should get five place accuracy for most positive arguments:
+
+    C COMPUTE SQUARE ROOTS BY NEWTON'S METHOD
+     100  READ(5,110) X
+     110     FORMAT(F10.0)
+    C
+          IF (X .LT. 0.0) WRITE(6,120) X
+     120     FORMAT(1X, 'SQRT(', 1PE12.4, ') UNDEFINED')
+    C
+          IF (X .EQ. 0.0) WRITE(6,130) X, X
+     130     FORMAT(1X, 'SQRT(', 1PE12.4, ') = ', 1PE12.4)
+    C
+          IF (X .LE. 0.0) GOTO 100
+          B = X/2.0
+     200  IF (ABS(X/B - B) .LT. 1.0E-5 * B) GOTO 300
+          B = (X/B + B) / 2.0
+          GOTO 200
+     300  WRITE(6,130) X, B
+          GOTO 100
+          END
+
+The modified program is still not a typical square root routine, nor do we wish to go into the detailed treatment of floating point arithmetic needed to make it one. The original example is, however, typical of programs in general: it profits from criticism and revision.
