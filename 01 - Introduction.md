@@ -59,6 +59,8 @@ One less statement, simpler logic, and, as it happens, we no longer need the lab
 
 It might seem that we're making a great fuss about a little thing in this last example. After all, it's still pretty obvious what the code says. The trouble is, although any single weakness causes no great harm, the cumulative effect of several confusing statements is code that is simply unintelligible.
 
+---
+
 Our next example is somewhat larger:
 
 _The following is a typical program to evaluate the square root (`B`) of a number (`X`):_
@@ -79,6 +81,8 @@ _The following is a typical program to evaluate the square root (`B`) of a numbe
 Because it is bigger, we can study it on several levels and learn something from each. For instance, before we analyze the code in detail, we might consider whether this program is truly "typical." It is unlikely that a square root routine would be packaged as a main program that reads its input from a file--a function with an argument would be far more useful. Even assuming that we really do want a main program that computes square roots, is it likely that we would want it to compute only one before stopping?
 
 This unfortunate tendency to write overly restricted code influences how we write programs that are supposed to be general. Soon enough we shall meet programs designed to keep track of exactly seventeen salesmen, to sort precisely 500 numbers, to trace through just one maze. We can only guess at how much of the program rewriting that goes on every day actually amounts to entering parameters via the compiler.
+
+---
 
 Let us continue with the square root program. It is an implementation of Newton's method, which is indeed at the heart of many a library square root routine (although we need not go into precisely how it works). With proper data, the method converges rapidly. If `X` is negative, however, this program can go into an infinite loop. (Try it.) A good routine would instead provide an error return or a diagnostic message. And the program blows up in statement 2 if `X` is zero, a case that must be treated spearately. The square root of zero should be reported as zero.
 
@@ -154,3 +158,31 @@ is wrong: the `-` should be `=`. The program was contrived in part to illustrate
 More to the point is the question of whether programmers should be encouraged to use extended ranges in the first place. Jumping around unnecessarily in a computer program has proved to be a fruitful source of errors, and usually indicates that the programmer is not entirely in control of the code. The apparently random statement numbers in this example are often a symptom of the same disorder.
 
 The program has other flaws. It reads in 500 numbers, one per card, and sorts them about as inefficiently as possible--by comparing each number with all integers between -999 and +999. It does this once, for only one set of numbers, then stops.
+
+But wait. With an `I4` input format, it is possible to read positive numbers as large as 9999, since we can leave out the plus sign; the program as it stands will fail to list four-digit numbers. To correct the oversight will slow the algorithm by a factor of more than five, without extending its generality in the least. Extending this method to handle larger integers would slow it by orders of magnitude, and to ask it to handle floating point numbers would be unthinkable.
+
+We will not attempt to rewrite this code, since we disagree with its basic approach. (Chapter 7 contains several better sorting programs.) We just want to show that the same program can be viewed from different perspectives, and that the job of critical reading doesn't end when you find a typo or even a poor coding practice. In the chapters to come we will expore the issues touched on here and several others that strongly affect programming style.
+
+---
+
+We begin, in Chapter 2, with a study of how to express individual statements clearly. Writing arithmetic expressions and conditional (`IF`) statements is usually the first aspect of computer programming that is taught. It is important to master these fundamentals before becoming too involved with other language features.
+
+Chapter 3 treats the control-flow structure of computer programs, that is, how flow of control is specified through looping and decision-making statements. It also shows how data can be represented to make programming as easy as possible, and how data structure can be used to derive a clean control flow. Program structure is covered in CHapter 4, how to break up a program into manageable pieces. Considerable emphasis is given in these chapters to proper use of structured programming and sound design techniques.
+
+Chapter 5 examines input and output: how to render programs less vulnerable to bad input data and what to output to obtain maximum benefit from a run. A number of common blunders are studied in Chapter 6, and tips are given on how to spot such errors and correct them.
+
+Contrary to popular practice, efficient and documentation are reserved for the last two chapters, 7 and 8. While both of these topics are important and warrant study, we feel they have received proportionately too much attention--particularly in introductory courses--at the expensve of clarity and general good style
+
+---
+
+A few words on the ground rules we have used in criticizing programs:
+
+1. Programs are present in a form as close to the original as our typescript permits. Formatting, typographical errors, and syntax errors are as in the original. (Exception: three PL/I programs have been translated from the 48-character set into the 60-character set.)
+2. We regularly abstract parts of programs to focus better on the essential points. We believe that the failings we discuss are inherent in the code shown, and not caused or aggravated by abstracting. We have tried not to quote out of context. We have tried throughout to solve essentially the same problem as the original version did, so comparisons may be made fairly, even though this sometimes means that we do not make all possible improvements in programs.
+3. We will not fault an example for using non-standard language features (for example, mixed mode arithmetic in Fortran) unless the use is quite unusual or dangerous. Most compilers accept non-standard constructions, and standards themselves change with time. Remember, though, that unusual features are rarely portable, and are the least resistant to changes in their environment.
+
+    Our own Fortran hews closely to the 1966 American National Standards Institute (ANSI) version, except for our use of quoted Hollerith strings (we refuse to count characters). PL/I programs meet the standard set by IBM's checkout compiler, version 1, release 3.0. Although there are new versions of Fortran and PL/I in sight which will make better programming possible in both of these languages, they are not yet widespread, so we have not written any examples in the newer dialects.
+4. In our discussions of numerical algorithms (like the square root routine above) we will not try to treat all possible pathological cases; the defenses needed against overflow, significance loss, and other numerical pitfalls are beyond the scope of this book. But we do insist that at least the rudimentary precautions be taken, like using relative tests instead of absolute and avoiding division by zero, to ensure good results for reasonal inputs.
+5. Every line of code in this book has been compiled, directly from the text, which is in machine-readable form. All of our programs have been tested (Fortran on a Honeywell 6070, PL/I on an IBM 370/168). Our Fortran programs have also been run through a verifier to monitor compliance with the ANSI standard.
+
+    Nevertheless, mistakes can occur. We encourage you to view with suspicion anything we say that looks peculiar. Test it, try it out. Don't treat computer output as gospel. If you learn to be wary of everyone else's programs, you will be better able to check your own.
