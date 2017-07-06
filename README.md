@@ -1,3 +1,3 @@
 # The Elements of Programming Style
 
-* [Introduction](01 - Introduction.md)
+* [Introduction](01_Introduction.md)
