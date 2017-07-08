@@ -186,3 +186,9 @@ A few words on the ground rules we have used in criticizing programs:
 5. Every line of code in this book has been compiled, directly from the text, which is in machine-readable form. All of our programs have been tested (Fortran on a Honeywell 6070, PL/I on an IBM 370/168). Our Fortran programs have also been run through a verifier to monitor compliance with the ANSI standard.
 
     Nevertheless, mistakes can occur. We encourage you to view with suspicion anything we say that looks peculiar. Test it, try it out. Don't treat computer output as gospel. If you learn to be wary of everyone else's programs, you will be better able to check your own.
+
+---
+
+## Points to ponder
+
+1. A matrix with _n_ rows and _n_ columns as _n<sup>2</sup>_ elements. So to initialize such a matrix requires _n<sup>2</sup>_ assignments. To multiple two _n_ by _n_ matrices together, or to solve _n_ linear equations in _n_ unknowns, involves on the order of _n<sup>3</sup>_ operations by classical methods.
