@@ -191,4 +191,36 @@ A few words on the ground rules we have used in criticizing programs:
 
 ## Points to ponder
 
-1. A matrix with _n_ rows and _n_ columns as _n<sup>2</sup>_ elements. So to initialize such a matrix requires _n<sup>2</sup>_ assignments. To multiple two _n_ by _n_ matrices together, or to solve _n_ linear equations in _n_ unknowns, involves on the order of _n<sup>3</sup>_ operations by classical methods.
+1. A matrix with _n_ rows and _n_ columns as _n<sup>2</sup>_ elements. So to initialize such a matrix requires _n<sup>2</sup>_ assignments. To multiple two _n_ by _n_ matrices together, or to solve _n_ linear equations in _n_ unknowns, involves on the order of _n<sup>3</sup>_ operations by classical methods. (These are the sorts of things that matrix manipulation programs do.) Give arguments to support the following conjectures:
+    1. If _n_ ≥ 10, the time required to initialize a matrix is not very important.
+    2. If _n_ < 10, the time required to initialize a matrix is not very important. (Hint: input and output conversions are more time consuming than arithmetic.
+2. In the first edition of this book, we wrote the square root routine this way:
+    
+           C COMPUTE SQUARE ROOTS BY NEWTON'S METHOD
+            10  READ(5,11) X
+            11  FORMAT(F10.0)
+                IF (X .GE. 0.0) GOTO 20
+                    WRITE(6,13) X
+            13      FORMAT('SQRT(', 1PE12.5, ') UNDEFINED')
+                    GOTO 10
+            20 IF (X .GT. 0.0) GOTO 30
+                  B = 0.0
+                  GOTO 50
+            30 B = 1.0
+            40    A = B
+                  B = (X/A + A)/2.0
+                  IF (ABS((X/B)/B - 1.0) .GE. 1.0E-5) GOTO 40
+            50 WRITE (6,51) X, B
+            51 FORMAT(' SQRT(', 1PE12.5, ') = ', 1PE12.5)
+               GOTO 10
+               END
+    
+    This is "more efficient" because there are no repeated tests. Which version do you prefer, and why? How much time and space difference does the change make? What deficiencies of the Fortran language are illustrated by both versions?
+3. In the square root routine, we saw that testing for convergence against an absolute threshold like `1.0E-5` is perilous. We recommend testing instead against some sort of relative standard. How can the function
+    
+        REAL FUNCTION RELDIF(X, Y)
+        RELDIF = ABS(X - Y) / AMAX1(ABS(X), ABS(Y))
+        RETURN
+        END
+    
+    be used in the example? (`AMAX1` is the Fortran function that returns the maximum of two or more floating point numbers as floating point.) This function is relatively well-behaved for values that might be encountered in the square-root routine. In more general applications, are there any values of `X` and `Y` that might cause trouble?
